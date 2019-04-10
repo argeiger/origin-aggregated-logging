@@ -9,11 +9,12 @@ module Elasticsearch
         # @option arguments [String] :index The name of the source index to split (*Required*)
         # @option arguments [String] :target The name of the target index to split into (*Required*)
         # @option arguments [Hash] :body The configuration for the target index (`settings` and `aliases`)
+        # @option arguments [Boolean] :copy_settings whether or not to copy settings from the source index (defaults to false)
         # @option arguments [Time] :timeout Explicit operation timeout
         # @option arguments [Time] :master_timeout Specify timeout for connection to master
         # @option arguments [String] :wait_for_active_shards Set the number of active shards to wait for on the shrunken index before the operation returns.
         #
-        # @see http://www.elastic.co/guide/en/elasticsearch/reference/master/indices-split-index.html
+        # @see http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-split-index.html
         #
         def split(arguments={})
           raise ArgumentError, "Required argument 'index' missing" unless arguments[:index]

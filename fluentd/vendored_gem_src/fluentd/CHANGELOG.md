@@ -1,13 +1,35 @@
 # v1.4
 
+## Release v1.4.2 - 2019/04/02
+
+### Enhancements
+
+* in_http: subdomain support in CORS domain
+  https://github.com/fluent/fluentd/pull/2337
+* in_monitor_agent: Expose current timekey list as a buffer metrics
+  https://github.com/fluent/fluentd/pull/2343
+* in_tcp/in_udp: Add source_address_key parameter
+  https://github.com/fluent/fluentd/pull/2347
+* in_forward: Add send_keepalive_packet parameter to check the remote connection is available or not
+  https://github.com/fluent/fluentd/pull/2352
+
+### Bug fixes
+
+* out_exec_filter: Fix typo of child_respawn description
+  https://github.com/fluent/fluentd/pull/2341
+* in_tail: Create parent directories for symlink
+  https://github.com/fluent/fluentd/pull/2353
+* in_tail: Fix encoding duplication check for non-specified case
+  https://github.com/fluent/fluentd/pull/2361
+* log: Fix time format handling of plugin logger when log format is JSON
+  https://github.com/fluent/fluentd/pull/2356
+
 ## Release v1.4.1 - 2019/03/18
 
 ### Enhancements
 
 * system: Add worker_id to process_name when workers is larger than 1
   https://github.com/fluent/fluentd/pull/2321
-* in_syslog: Check message length when read from buffer in octet counting
-  https://github.com/fluent/fluentd/pull/2323
 * parser_regexp: Check named captures. When no named captures, configuration error is raised
   https://github.com/fluent/fluentd/pull/2331
 
@@ -15,6 +37,8 @@
 
 * out_forward: Make tls_client_private_key_passphrase secret
   https://github.com/fluent/fluentd/pull/2324
+* in_syslog: Check message length when read from buffer in octet counting
+  https://github.com/fluent/fluentd/pull/2323
 
 ## Release v1.4.0 - 2019/02/24
 

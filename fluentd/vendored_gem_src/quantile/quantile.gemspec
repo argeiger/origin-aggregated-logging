@@ -9,12 +9,12 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib".freeze]
   s.authors = ["Matt T. Proud".freeze]
   s.date = "2018-05-04"
-  s.description = "Graham Cormode and S. Muthukrishnan's Effective Computation of Biased Quantiles over Data Streams in ICDE\u201905".freeze
+  s.description = "Graham Cormode and S. Muthukrishnan's Effective Computation of Biased Quantiles over Data Streams in ICDE\u{2019}05".freeze
   s.email = "matt.proud@gmail.com".freeze
   s.files = ["LICENSE".freeze, "README.md".freeze, "lib/quantile.rb".freeze, "lib/quantile/estimator.rb".freeze, "lib/quantile/quantile.rb".freeze, "lib/quantile/version.rb".freeze]
   s.homepage = "http://github.com/matttproud/ruby_quantile_estimation".freeze
   s.licenses = ["Apache 2.0".freeze]
-  s.rubygems_version = "2.7.6".freeze
+  s.rubygems_version = "2.5.2".freeze
   s.summary = "Streaming Quantile Estimation".freeze
 end
 

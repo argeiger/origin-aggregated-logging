@@ -24,26 +24,17 @@ module Elasticsearch
         #     client.indices.put_settings index: 'my-big-index',
         #                                 body: { 'index.routing.allocation.require.tag' => 'bigbox' }
         #
+        # @option arguments [List] :index A comma-separated list of index names; use `_all` or empty string to perform the operation on all indices
         # @option arguments [Hash] :body The index settings to be updated (*Required*)
-        # @option arguments [List] :index A comma-separated list of index names; use `_all` or empty string
-        #                                to perform the operation on all indices
-        # @option arguments [Boolean] :allow_no_indices Whether to ignore if a wildcard indices expression resolves into
-        #                                               no concrete indices. (This includes `_all` string or when no
-        #                                               indices have been specified)
-        # @option arguments [String] :expand_wildcards Whether to expand wildcard expression to concrete indices that
-        #                                              are open, closed or both. (options: open, closed)
-        # @option arguments [String] :ignore_indices When performed on multiple indices, allows to ignore
-        #                                            `missing` ones (options: none, missing) @until 1.0
-        # @option arguments [Boolean] :ignore_unavailable Whether specified concrete indices should be ignored when
-        #                                                 unavailable (missing, closed, etc)
-        # @option arguments [Boolean] :include_defaults Whether to return all default clusters setting
-        # @option arguments [Boolean] :preserve_existing Whether to update existing settings.
-        #                                                If set to `true` existing settings on an index remain
-        #                                                unchanged, the default is `false`
         # @option arguments [Time] :master_timeout Specify timeout for connection to master
+        # @option arguments [Time] :timeout Explicit operation timeout
+        # @option arguments [Boolean] :preserve_existing Whether to update existing settings. If set to `true` existing settings on an index remain unchanged, the default is `false`
+        # @option arguments [Boolean] :ignore_unavailable Whether specified concrete indices should be ignored when unavailable (missing or closed)
+        # @option arguments [Boolean] :allow_no_indices Whether to ignore if a wildcard indices expression resolves into no concrete indices. (This includes `_all` string or when no indices have been specified)
+        # @option arguments [String] :expand_wildcards Whether to expand wildcard expression to concrete indices that are open, closed or both. (options: open, closed, none, all)
         # @option arguments [Boolean] :flat_settings Return settings in flat format (default: false)
         #
-        # @see http://www.elasticsearch.org/guide/reference/api/admin-indices-update-settings/
+        # @see http://www.elastic.co/guide/en/elasticsearch/reference/current/indices-update-settings.html
         #
         def put_settings(arguments={})
           raise ArgumentError, "Required argument 'body' missing" unless arguments[:body]
@@ -59,13 +50,12 @@ module Elasticsearch
         #
         # @since 6.2.0
         ParamsRegistry.register(:put_settings, [
-            :ignore_indices,
+            :master_timeout,
+            :timeout,
+            :preserve_existing,
             :ignore_unavailable,
-            :include_defaults,
             :allow_no_indices,
             :expand_wildcards,
-            :preserve_existing,
-            :master_timeout,
             :flat_settings ].freeze)
       end
     end

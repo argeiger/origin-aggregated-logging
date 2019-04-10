@@ -10,11 +10,10 @@ module Elasticsearch
         #
         #     client.cluster.pending_tasks
         #
-        # @option arguments [Boolean] :local Return local information, do not retrieve the state from master node
-        #                                    (default: false)
+        # @option arguments [Boolean] :local Return local information, do not retrieve the state from master node (default: false)
         # @option arguments [Time] :master_timeout Specify timeout for connection to master
         #
-        # @see http://www.elasticsearch.org/guide/en/elasticsearch/reference/master/cluster-pending.html
+        # @see http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/cluster-pending.html
         #
         def pending_tasks(arguments={})
           method = HTTP_GET
