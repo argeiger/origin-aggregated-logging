@@ -177,50 +177,15 @@ else
 fi
 export K8S_FILTER_REMOVE_KEYS ENABLE_ES_INDEX_NAME
 
-if [ -z $ES_HOST ]; then
-    echo "ERROR: Environment variable ES_HOST for Elasticsearch host name is not set."
-    exit 1
-fi
-if [ -z $ES_PORT ]; then
-    echo "ERROR: Environment variable ES_PORT for Elasticsearch port number is not set."
-    exit 1
-fi
 
-# How many outputs?
-if [ -n "${MUX_CLIENT_MODE:-}" ] ; then
-    # A fluentd collector configured as a mux client has just one output: sending to a mux.
-    NUM_OUTPUTS=1
-    rm -f $CFG_DIR/openshift/filter-post-z-retag-*.conf
-    if [ -n "$output_label" ]; then
-        cp $CFG_DIR/{,openshift}/filter-post-z-mux-client.conf
-    fi
-    # Enable "output-es-ops-config.conf in output-operations.conf"
-    # we need something there so output-operations.conf won't have an empty @copy without a <store> block
-    # but it won't actually be used in this case - output-pre-mux-client.conf will match everything
-    # before we get here
-    cp $CFG_DIR/{openshift,dynamic}/output-es-ops-config.conf
-else
-    # check ES_HOST vs. OPS_HOST; ES_PORT vs. OPS_PORT
-    if [ "$ES_HOST" = ${OPS_HOST:-""} -a $ES_PORT -eq ${OPS_PORT:-0} ]; then
-        # There is one output Elasticsearch
-        NUM_OUTPUTS=1
-        # Disable "output-operations.conf"
-        rm -f $CFG_DIR/openshift/output-operations.conf
-        touch $CFG_DIR/openshift/output-operations.conf
-        rm -f $CFG_DIR/openshift/filter-post-z-retag-*.conf $CFG_DIR/openshift/filter-post-mux-client.conf
-        if [ -n "$output_label"  ]; then
-            cp $CFG_DIR/{,openshift}/filter-post-z-retag-one.conf
-        fi
-    else
-        NUM_OUTPUTS=2
-        # Enable "output-es-ops-config.conf in output-operations.conf"
-        cp $CFG_DIR/{openshift,dynamic}/output-es-ops-config.conf
-        cp $CFG_DIR/{openshift,dynamic}/output-es-ops-retry.conf
-        rm -f $CFG_DIR/openshift/filter-post-z-retag-*.conf $CFG_DIR/openshift/filter-post-mux-client.conf
-        if [ -n "$output_label" ]; then
-            cp $CFG_DIR/{,openshift}/filter-post-z-retag-two.conf
-        fi
-    fi
+# There is one output Elasticsearch
+NUM_OUTPUTS=1
+# Disable "output-operations.conf"
+rm -f $CFG_DIR/openshift/output-operations.conf
+touch $CFG_DIR/openshift/output-operations.conf
+rm -f $CFG_DIR/openshift/filter-post-z-retag-*.conf $CFG_DIR/openshift/filter-post-mux-client.conf
+if [ -n "$output_label"  ]; then
+  cp $CFG_DIR/{,openshift}/filter-post-z-retag-one.conf
 fi
 
 # If FILE_BUFFER_PATH exists and it is not a directory, mkdir fails with the error.
@@ -313,30 +278,6 @@ elif [ -d /var/lib/docker/containers ] ; then
         umount /var/lib/docker/containers/*/shm || :
     else
         umount /var/lib/docker/containers/*/shm > /dev/null 2>&1 || :
-    fi
-fi
-
-if [[ "${USE_REMOTE_SYSLOG:-}" = "true" ]] ; then
-    # The symlink is a workaround for https://github.com/openshift/origin-aggregated-logging/issues/604
-    found=
-    for file in /usr/share/gems/gems/fluent-plugin-remote-syslog-*/lib/fluentd/plugin/*.rb ; do
-        bname=$(basename $file)
-        if [ ! -e "/etc/fluent/plugin/$bname" -a -f "$file" ] ; then
-            ln -s $file /etc/fluent/plugin/
-            found=true
-        fi
-    done
-    if [ -z "${found:-}" ] ; then
-        # not found in rpm location - look in alternate location
-        for file in /opt/app-root/src/gems/fluent-plugin-remote-syslog*/lib/fluentd/plugin/*.rb ; do
-            bname=$(basename $file)
-            if [ ! -e "/etc/fluent/plugin/$bname" -a -f "$file" ] ; then
-                ln -s $file /etc/fluent/plugin/
-            fi
-        done
-    fi
-    if [[ $REMOTE_SYSLOG_HOST ]] ; then
-        ruby generate_syslog_config.rb
     fi
 fi
 
